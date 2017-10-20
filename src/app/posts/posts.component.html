@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="row" *ngFor="let po of pos; let i = index;trackBy: po?.id;">
+    <div class="card" style="width: 20rem;">
+      <div class="card-block">
+        <h4 class="card-title">{{ po.ponum }}</h4>
+        <p class="card-text">{{ po.poheader }}</p>
+        <button (click)="logId(po.id)" class="btn btn-primary">Log ID</button>
+      </div>
+    </div>
+  </div>
+</div>
