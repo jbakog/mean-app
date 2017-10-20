@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 export class PostsComponent implements OnInit, OnDestroy {
 
   // instantiate posts to an empty array
+  po;
   pos: any = [];
   connection;
 
@@ -42,5 +43,8 @@ export class PostsComponent implements OnInit, OnDestroy {
   logId(id) {
     console.log(id);
     this.postsService.sendMessage('me', id);
+  }
+  pdf() {
+    // TODO
   }
 }
