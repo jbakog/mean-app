@@ -19,6 +19,9 @@ module.exports = function (socket) {
       }
       // We are scrolling over the cursor data and broadcasting the changes using socket.
       cursor.each(function (err, row) {
+        if(err) {
+          console.log(err);
+        }
         console.log('loop');
         if (row.type === 'remove') {
           // deleted

@@ -34,12 +34,17 @@ app.get('*', (req, res) => {
 
 // socket io
 io.on('connection', (socket) => {
-      console.log('user connected');
-      feed = require('./server/models/feeds')(socket);
-      socket.on('disconnect', function() {
-          console.log('user disconnected');
-      });
+  console.log('user connected');
+  socket.on('disconnect', function () {
+    console.log('user disconnected');
   });
+  socket.on('me', function (message) {
+    console.log('test message: ' + message);
+  });
+  socket.on('subscribe2po', function (message) {
+    feed = require('./server/models/feeds')(socket);
+  });
+});
 
 http.listen(config.express.port, () => console.log(`API running on localhost:${config.express.port}`));
 

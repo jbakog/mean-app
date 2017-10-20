@@ -35,4 +35,9 @@ export class PostsService {
     });
     return observable;
   }
+
+  sendMessage(ctx, message) {
+    this.socket.emit(ctx, message);
+  }
+
 }

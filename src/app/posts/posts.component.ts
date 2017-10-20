@@ -20,6 +20,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.postsService.getAllPosts().subscribe(pos => {
       console.log('api: ' + pos);
       this.pos = pos;
+      this.postsService.sendMessage('subscribe2po', null);
     });
 
     // subscribe to socketio
@@ -40,5 +41,6 @@ export class PostsComponent implements OnInit, OnDestroy {
 
   logId(id) {
     console.log(id);
+    this.postsService.sendMessage('me', id);
   }
 }
