@@ -1,6 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PostsService } from '../posts.service';
 import * as _ from 'lodash';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-posts',
@@ -45,6 +49,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.postsService.sendMessage('me', id);
   }
   pdf() {
-    // TODO
+    var docDefinition = { content: 'This is an sample PDF printed with pdfMake' };
+    pdfMake.createPdf(docDefinition).open(); 
   }
 }
