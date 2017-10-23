@@ -8,6 +8,7 @@ import { PostsService } from './posts.service';
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { PdfCreatorService } from './pdfCreator/pdf-creator.service';
 
 
 // Define the routes
@@ -39,7 +40,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES) // Add routes to the app
   ],
-  providers: [PostsService],
+  providers: [PostsService, PdfCreatorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
