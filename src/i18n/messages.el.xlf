@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="welcomeTitle" datatype="html">
+        <source>
+    Welcome to <x id="INTERPOLATION"/>!
+  </source>
+  <target>Καλώς ήρθατε <x id="INTERPOLATION"/>!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\app.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="postcompt_sendemail" datatype="html">
+      <source>SendEmail</source>
+      <target>Αποστολή εμαιλ</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
