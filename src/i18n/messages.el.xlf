@@ -12,6 +12,10 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="postcompt_sendemail" datatype="html">
+      <source>SendEmail</source>
+      <target>Αποστολή εμαιλ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -3,6 +3,11 @@
   <h1 i18n="User welcome|An introduction header for this app@@welcomeTitle">
     Welcome to {{title}}!
   </h1>
+  <template ngFor let-lang [ngForOf]="languages">
+    <span *ngIf="lang.code !== localeId">
+      <a href="/{{lang.code}}/">{{lang.label}}</a> </span>
+    <span *ngIf="lang.code === localeId">{{lang.label}} </span>
+  </template>
   <router-outlet></router-outlet>
 
 
