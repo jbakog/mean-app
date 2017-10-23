@@ -23,8 +23,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Middleware for route
-app.use(require('./server/controllers/po'));
+//app.use(require('./server/controllers/po'));
 
+// Middleware for email
+//app.use(require('/server/controllers/email'));
+app.use(require('./server/routes/routes'));
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));

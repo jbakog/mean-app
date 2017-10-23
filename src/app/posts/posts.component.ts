@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Http, Headers } from '@angular/http';
 import { PostsService } from '../posts.service';
 import * as _ from 'lodash';
 
@@ -14,7 +15,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   pos: any = [];
   connection;
 
-  constructor(private postsService: PostsService) { }
+  constructor(private postsService: PostsService, private http: Http) { }
 
   ngOnInit() {
     // Retrieve posts from the API
@@ -46,5 +47,16 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
   pdf() {
     // TODO
+  }
+  // Send Email Tests
+  sendEmail() {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/X-www-form-urlencoded');
+
+    this.http.post('http://localhost:3000/sendmail', 'name=jbako@cosmo-one.gr', {headers: headers}).subscribe((data) => {
+      if (data.json().success) {
+        console.log('Sent successfully');
+      }
+  });
   }
 }
