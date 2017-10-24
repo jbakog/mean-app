@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Headers } from '@angular/http';
 import { PostsService } from '../posts.service';
 import { PdfCreatorService } from '../pdfCreator/pdf-creator.service';
-
+import { AuthService } from '../auth.service';
+import { AuthHttp } from 'angular2-jwt';
 import * as _ from 'lodash';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 @Component({
@@ -22,9 +22,13 @@ export class PostsComponent implements OnInit, OnDestroy {
   pdfJsonStruct;
   connection;
 
-  constructor(private postsService: PostsService, private pdfCreatorService: PdfCreatorService, private http: Http) { }
+  constructor(private postsService: PostsService, private authHttp: AuthHttp, private auth: AuthService) {
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+   }
 
   ngOnInit() {
+    // authenticate
+    this.auth.login('');
     // Retrieve posts from the API
     this.postsService.getAllPosts().subscribe(pos => {
       console.log('api: ' + pos);
@@ -92,10 +96,11 @@ export class PostsComponent implements OnInit, OnDestroy {
     const headers = new Headers();
     headers.append('Content-Type', 'application/X-www-form-urlencoded');
 
-    this.http.post('http://localhost:3000/sendmail', 'name=jbako@cosmo-one.gr', {headers: headers}).subscribe((data) => {
-      if (data.json().success) {
-        console.log('Sent successfully');
-      }
-  });
+    this.authHttp.post('http://localhost:3000/api/v1/sendmail', 'name=jbako@cosmo-one.gr', {headers: headers})
+    .map(res => res.json())
+    .subscribe(
+      data =>  console.log(data),
+      error => console.log(error)
+    );
   }
 }
