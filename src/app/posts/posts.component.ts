@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { PostsService } from '../posts.service';
+import { PdfCreatorService } from '../pdfCreator/pdf-creator.service';
+
 import * as _ from 'lodash';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -17,9 +19,10 @@ export class PostsComponent implements OnInit, OnDestroy {
   // instantiate posts to an empty array
   po;
   pos: any = [];
+  pdfJsonStruct;
   connection;
 
-  constructor(private postsService: PostsService, private http: Http) { }
+  constructor(private postsService: PostsService, private pdfCreatorService: PdfCreatorService, private http: Http) { }
 
   ngOnInit() {
     // Retrieve posts from the API
@@ -49,10 +52,41 @@ export class PostsComponent implements OnInit, OnDestroy {
     console.log(id);
     this.postsService.sendMessage('me', id);
   }
+
   pdf() {
-    var docDefinition = { content: 'This is an sample PDF printed with pdfMake' };
-    pdfMake.createPdf(docDefinition).open(); 
+    // Retrieve posts from the API
+    let poData;
+    this.postsService.getAllPosts().map( /// <<<=== use `map` here
+    (response) => {
+      let data = response.text() ? response.json() : [{}];
+      if (data) {
+        poData = data;
+      }
+      return JSON.stringify(poData);
+    }
+  );
+
+  this.postsService.getAllPosts().subscribe(data => {
+    
+      this.pdfJsonStruct = this.pdfCreatorService.createPdfType1(data);
+      pdfMake.createPdf(this.pdfJsonStruct).open();
+
+   });
+  
+
+
+
+    /*this.postsService.getAllPosts().subscribe(pos => {
+
+      pdfMake.createPdf(this.pdfCreatorService.createPdfType1(pos)).open();
+    }, () => {
+      //this.pdfJsonStruct = this.pdfCreatorService.createPdfType1(pdfData);
+      //pdfMake.createPdf(this.pdfJsonStruct).open();
+    });*/
+
+    
   }
+
   // Send Email Tests
   sendEmail() {
     const headers = new Headers();

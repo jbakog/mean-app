@@ -12,21 +12,36 @@ export class PdfCreatorService {
 
   //constructor() { }
 
-  private url = 'http://localhost:3000';
-  private socket;
-
   constructor(private http: Http) { }
 
-  createPdfType1()
+  createPdfType1(pdfData)
   {
-    console.log('inside createPdfType1()');    
-    return this.getAllPosts();
-  }
+
+    var pdfJson = {
+      content:
+      [ 
+        {
+          table :
+          {
+            headerRows: 1,
+            widths: [ '*', 'auto', 100, '*' ],
+            body: 
+            [
+              [ 'id', 'name', 'podesc', 'ponum' ]
+            ]
+          }
+        }
+      ]
+    };
+
+    pdfData.forEach( function (arrayItem)
+    {
+        //alert(JSON.stringify(arrayItem));
+        pdfJson.content[0].table.body.push([arrayItem.id, arrayItem.name, arrayItem.podesc, arrayItem.ponum]);
+    });
   
-  // Get all posts from the API
-  getAllPosts() {
-    return this.http.get('/api/po')
-    .map(res => res.json());
+    
+    return pdfJson;
   }
 
 }
