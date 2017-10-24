@@ -22,15 +22,30 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Middleware for route
-//app.use(require('./server/controllers/po'));
+app.all('/*', function(req, res, next) {
+  // CORS headers
+  res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  // Set custom headers for CORS
+  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+  if (req.method == 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
+});
 
-// Middleware for email
-//app.use(require('/server/controllers/email'));
+// Auth Middleware - This will check if the token is valid
+// Only the requests that start with /api/v1/* will be checked for the token.
+// Any URL's that do not follow the below pattern should be avoided unless you 
+// are sure that authentication is not needed
+app.all('/api/v1/*', [require('./server/middlewares/validateRequest')]);
+
+// Middleware for route
 app.use(require('./server/routes/routes'));
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+  res.sendFile(path.join(__dirname, 'dist/en/index.html'));
 });
 
 //app.set('port', config.express.port);

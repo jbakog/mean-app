@@ -1,9 +1,12 @@
 var express = require('express');
-var actions = require('../methods/actions');
+var helpers = require('../middlewares/helpers');
+var purchaseorder = require('../middlewares/purchaseorder');
+var auth = require('./auth.js');
 
 var router = express.Router();
 
-router.get('/api/po', actions.getAllPO);
-router.post('/sendmail', actions.sendMail);
+router.post('/authenticate', auth.login);
+router.get('/api/v1/po', purchaseorder.getAllPO);
+router.post('/api/v1/sendmail', helpers.sendMail);
 
 module.exports = router;
