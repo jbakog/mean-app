@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const sockets = require('./server/routes/socket');
 var http = require('http').Server(app);
 // Adding socket.io
 var io = require('socket.io')(http);
@@ -48,21 +49,21 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/en/index.html'));
 });
 
-//app.set('port', config.express.port);
-
 // socket io
+/*
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.on('disconnect', function () {
     console.log('user disconnected');
   });
-  socket.on('me', function (message) {
-    console.log('test message: ' + message);
-  });
   socket.on('subscribe2po', function (message) {
     feed = require('./server/models/feeds')(socket);
   });
-});
+});*/
+// New socket.io config
+feed = require('./server/routes/socket')(io);
+//new sockets(socket, []).socketConfig();
+
 
 http.listen(config.express.port, () => console.log(`API running on localhost:${config.express.port}`));
 

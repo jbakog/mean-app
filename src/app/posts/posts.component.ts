@@ -8,7 +8,7 @@ import { AuthHttp } from 'angular2-jwt';
 import * as _ from 'lodash';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-
+import { SocketService } from '../socket.service';
 
 @Component({
   selector: 'app-posts',
@@ -25,23 +25,27 @@ export class PostsComponent implements OnInit, OnDestroy {
   constants;
 
   constructor(private postsService: PostsService, private authHttp: AuthHttp, private auth: AuthService,
-              private pdfCreatorService: PdfCreatorService, private constantsService: ConstantsService) {
+              private pdfCreatorService: PdfCreatorService, private constantsService: ConstantsService, private socketService: SocketService) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-  }
+   }
 
   ngOnInit() {
     // authenticate
     this.auth.login('');
+
+    // send messages to socket.io
+    this.socketService.userJoin('jbako');
+
     // Retrieve posts from the API
     this.postsService.getAllPosts().subscribe(pos => {
       console.log('api: ' + pos);
       this.pos = pos;
-      this.postsService.sendMessage('subscribe2po', null);
     });
 
     // subscribe to socketio
-    this.connection = this.postsService.getMessages().subscribe(data => {
+    /*
+    this.connection = this.socketService.userJoin('').subscribe(data => {
       console.log('socket: ' + data);
       if (data['type'] === 'remove') {
         console.log('remove');
@@ -49,7 +53,7 @@ export class PostsComponent implements OnInit, OnDestroy {
       } else {
         this.pos = _.unionBy([data['pos']], this.pos, 'id');
       }
-    });
+    });*/
 
   }
 

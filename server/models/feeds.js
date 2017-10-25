@@ -5,7 +5,7 @@ var rethinkdb = require('rethinkdb');
 var db = require('./db');
 var dbObject = new db();
 
-module.exports = function (socket) {
+module.exports = function (socket, data) {
   dbObject.connectToDb(function (err, connection) {
     if (err) {
       return callback(true, "Error connecting to database");
@@ -25,9 +25,11 @@ module.exports = function (socket) {
         console.log('loop');
         if (row.type === 'remove') {
           // deleted
-          socket.broadcast.emit("changeFeed", {"id": row.old_val.id, "type": row.type, "pos": row.old_val});
+          socket.broadcast.to(data).emit("changeFeed", {"id": row.old_val.id, "type": row.type, "pos": row.old_val});
+          console.log(data);
         } else if (row.type === 'add' || row.type === 'change') {
-          socket.broadcast.emit("changeFeed", {"id": row.new_val.id,"type": row.type,"pos": row.new_val});
+          socket.broadcast.to(data).emit("changeFeed", {"id": row.new_val.id,"type": row.type,"pos": row.new_val});
+          console.log(data);
         }
       });
     });

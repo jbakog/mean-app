@@ -6,7 +6,7 @@ import { HttpModule, Http, RequestOptions, ConnectionBackend } from '@angular/ht
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import { PostsService } from './Services/posts/posts.service';
 import { AuthService } from './Services/auth/auth.service';
-
+import { SocketService } from './socket.service';
 
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
@@ -53,7 +53,9 @@ const ROUTES = [
     provide: AuthHttp,
     useFactory: authHttpServiceFactory,
     deps: [Http, RequestOptions]
-  }],
+  }, SocketService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() { }
+}
