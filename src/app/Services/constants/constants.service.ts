@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ConstantsService {
-  jsonConstants = {};
+  // todo JSON?
+  // jsonConstants = {};
 
-  getConstants() {
+  /*getConstants() {
 
     this.jsonConstants = {
       routesV1 : {
@@ -14,7 +15,19 @@ export class ConstantsService {
       }
     };
 
-    return this.jsonConstants;
+    return ;
+  }*/
+
+  urlServer: string;
+  urlEmail: string;
+  urlEmailTo: string;
+  urlPos: string;
+
+  constructor() {
+    this.urlServer = 'http://localhost:3000';
+    this.urlEmail = '/api/v1/sendmail';
+    this.urlEmailTo = 'name=anastasios.markos@cosmo-one.gr';
+    this.urlPos = '/api/v1/po';
   }
 
 }

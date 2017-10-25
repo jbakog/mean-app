@@ -51,7 +51,6 @@ export class PostsComponent implements OnInit, OnDestroy {
       }
     });
 
-   alert(this.constantsService.getConstants());
   }
 
   ngOnDestroy() {
@@ -64,8 +63,6 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   pdf() {
-    const puts = JSON.stringify(this.constantsService.getConstants());
-    console.log(JSON.stringify(this.constants));
     // Retrieve posts from the API
     let poData;
     this.postsService.getAllPosts().map( /// <<<=== use `map` here
@@ -79,12 +76,8 @@ export class PostsComponent implements OnInit, OnDestroy {
   );
 
   this.postsService.getAllPosts().subscribe(data => {
-
       this.pdfJsonStruct = this.pdfCreatorService.createPdfType1(data);
-      this.constants = this.constantsService.getConstants();
-      console.log(this.constants);
       pdfMake.createPdf(this.pdfJsonStruct).open();
-
    });
 
   }
@@ -93,7 +86,8 @@ export class PostsComponent implements OnInit, OnDestroy {
   sendEmail() {
     const headers = new Headers();
     headers.append('Content-Type', 'application/X-www-form-urlencoded');
-    this.authHttp.post('http://localhost:3000/api/v1/sendmail', 'name=jbako@cosmo-one.gr', {headers: headers})
+    this.authHttp.post( this.constantsService.urlServer +
+                        this.constantsService .urlEmail, this.constantsService.urlEmailTo, {headers: headers})
     .map(res => res.json())
     .subscribe(
       data =>  console.log(data),

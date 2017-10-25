@@ -13,22 +13,22 @@ import { AuthHttp } from 'angular2-jwt';
 @Injectable()
 export class PostsService {
 
-  private url = 'http://localhost:3000';
+  // private url = 'http://localhost:3000';
   private socket;
 
-  constructor(private authHttp: AuthHttp) { }
+  constructor(private authHttp: AuthHttp, private constantsService: ConstantsService) { }
 
   // Get all posts from the API
   getAllPosts() {
     console.log('inside getAllPosts()');
-    return this.authHttp.get('/api/v1/po')
+    return this.authHttp.get(this.constantsService.urlPos)
     .map(res => res.json());
   }
 
   getMessages() {
     console.log('inside getMessages()');
     const observable = new Observable(observer => {
-      this.socket = io(this.url);
+      this.socket = io(this.constantsService.urlServer);
       this.socket.on('changeFeed', (data: any) => {
         observer.next(data);
       });

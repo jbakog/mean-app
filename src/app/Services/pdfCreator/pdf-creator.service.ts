@@ -30,7 +30,6 @@ export class PdfCreatorService {
         pdfJson.content[0].table.body.push([arrayItem.id, arrayItem.name, arrayItem.podesc, arrayItem.ponum]);
     });
 
-
     return pdfJson;
   }
 
