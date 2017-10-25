@@ -4,14 +4,15 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http, RequestOptions, ConnectionBackend } from '@angular/http';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
-import { PostsService } from './posts.service';
-import { AuthService } from './auth.service';
+import { PostsService } from './Services/posts/posts.service';
+import { AuthService } from './Services/auth/auth.service';
 
 
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { PdfCreatorService } from './pdfCreator/pdf-creator.service';
+import { PdfCreatorService } from './Services/pdfCreator/pdf-creator.service';
+import { ConstantsService } from './Services/constants/constants.service';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -48,7 +49,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES) // Add routes to the app
   ],
-  providers: [PostsService, PdfCreatorService, AuthService, {
+  providers: [PostsService, PdfCreatorService, AuthService, ConstantsService, {
     provide: AuthHttp,
     useFactory: authHttpServiceFactory,
     deps: [Http, RequestOptions]

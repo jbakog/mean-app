@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Headers } from '@angular/http';
-import { PostsService } from '../posts.service';
-import { PdfCreatorService } from '../pdfCreator/pdf-creator.service';
-import { AuthService } from '../auth.service';
+import { PostsService } from '../Services/posts/posts.service';
+import { PdfCreatorService } from '../Services/pdfCreator/pdf-creator.service';
+import { ConstantsService } from '../Services/constants/constants.service';
+import { AuthService } from '../Services/auth/auth.service';
 import { AuthHttp } from 'angular2-jwt';
 import * as _ from 'lodash';
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -21,10 +22,13 @@ export class PostsComponent implements OnInit, OnDestroy {
   pos: any = [];
   pdfJsonStruct;
   connection;
+  constants;
 
-  constructor(private postsService: PostsService, private authHttp: AuthHttp, private auth: AuthService) {
+  constructor(private postsService: PostsService, private authHttp: AuthHttp, private auth: AuthService,
+              private pdfCreatorService: PdfCreatorService, private constantsService: ConstantsService) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
-   }
+
+  }
 
   ngOnInit() {
     // authenticate
@@ -46,6 +50,8 @@ export class PostsComponent implements OnInit, OnDestroy {
         this.pos = _.unionBy([data['pos']], this.pos, 'id');
       }
     });
+
+   alert(this.constantsService.getConstants());
   }
 
   ngOnDestroy() {
@@ -58,11 +64,13 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   pdf() {
+    const puts = JSON.stringify(this.constantsService.getConstants());
+    console.log(JSON.stringify(this.constants));
     // Retrieve posts from the API
     let poData;
     this.postsService.getAllPosts().map( /// <<<=== use `map` here
     (response) => {
-      let data = response.text() ? response.json() : [{}];
+      const data = response.text() ? response.json() : [{}];
       if (data) {
         poData = data;
       }
@@ -71,31 +79,20 @@ export class PostsComponent implements OnInit, OnDestroy {
   );
 
   this.postsService.getAllPosts().subscribe(data => {
-    
+
       this.pdfJsonStruct = this.pdfCreatorService.createPdfType1(data);
+      this.constants = this.constantsService.getConstants();
+      console.log(this.constants);
       pdfMake.createPdf(this.pdfJsonStruct).open();
 
    });
-  
 
-
-
-    /*this.postsService.getAllPosts().subscribe(pos => {
-
-      pdfMake.createPdf(this.pdfCreatorService.createPdfType1(pos)).open();
-    }, () => {
-      //this.pdfJsonStruct = this.pdfCreatorService.createPdfType1(pdfData);
-      //pdfMake.createPdf(this.pdfJsonStruct).open();
-    });*/
-
-    
   }
 
   // Send Email Tests
   sendEmail() {
     const headers = new Headers();
     headers.append('Content-Type', 'application/X-www-form-urlencoded');
-
     this.authHttp.post('http://localhost:3000/api/v1/sendmail', 'name=jbako@cosmo-one.gr', {headers: headers})
     .map(res => res.json())
     .subscribe(

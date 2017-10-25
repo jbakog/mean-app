@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ConstantsService } from '../constants/constants.service';
 
 // socketio
 import { Subject } from 'rxjs/Subject';
