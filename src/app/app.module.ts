@@ -4,15 +4,15 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http, RequestOptions, ConnectionBackend } from '@angular/http';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
-import { PostsService } from './Services/posts/posts.service';
-import { AuthService } from './Services/auth/auth.service';
-import { SocketService } from './socket.service';
+import { PostsService } from './services/posts/posts.service';
+import { AuthService } from './services/auth/auth.service';
+import { SocketService } from './services/socket/socket.service';
 
 import { AppComponent } from './app.component';
 import { PostsComponent } from './posts/posts.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { PdfCreatorService } from './Services/pdfCreator/pdf-creator.service';
-import { ConstantsService } from './Services/constants/constants.service';
+import { PdfCreatorService } from './services/pdfCreator/pdf-creator.service';
+import { ConstantsService } from './services/constants/constants.service';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({

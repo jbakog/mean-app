@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Headers } from '@angular/http';
-import { PostsService } from '../Services/posts/posts.service';
-import { PdfCreatorService } from '../Services/pdfCreator/pdf-creator.service';
-import { ConstantsService } from '../Services/constants/constants.service';
-import { AuthService } from '../Services/auth/auth.service';
+import { PostsService } from '../services/posts/posts.service';
+import { PdfCreatorService } from '../services/pdfCreator/pdf-creator.service';
+import { ConstantsService } from '../services/constants/constants.service';
+import { AuthService } from '../services/auth/auth.service';
 import { AuthHttp } from 'angular2-jwt';
 import * as _ from 'lodash';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { SocketService } from '../socket.service';
+import { SocketService } from '../services/socket/socket.service';
 
 @Component({
   selector: 'app-posts',
@@ -25,7 +25,8 @@ export class PostsComponent implements OnInit, OnDestroy {
   constants;
 
   constructor(private postsService: PostsService, private authHttp: AuthHttp, private auth: AuthService,
-              private pdfCreatorService: PdfCreatorService, private constantsService: ConstantsService, private socketService: SocketService) {
+              private pdfCreatorService: PdfCreatorService, private constantsService: ConstantsService,
+              private socketService: SocketService) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
    }
@@ -35,6 +36,7 @@ export class PostsComponent implements OnInit, OnDestroy {
     this.auth.login('');
 
     // send messages to socket.io
+
     this.socketService.userJoin('jbako');
 
     // Retrieve posts from the API
@@ -44,16 +46,16 @@ export class PostsComponent implements OnInit, OnDestroy {
     });
 
     // subscribe to socketio
-    /*
-    this.connection = this.socketService.userJoin('').subscribe(data => {
+    this.connection = this.socketService.getMessages().subscribe(data => {
       console.log('socket: ' + data);
       if (data['type'] === 'remove') {
         console.log('remove');
         _.pull(this.pos, _.find(this.pos, data['pos']));
       } else {
+        console.log('received data changeFeed: ' + this.socketService.socket.id);
         this.pos = _.unionBy([data['pos']], this.pos, 'id');
       }
-    });*/
+    });
 
   }
 
