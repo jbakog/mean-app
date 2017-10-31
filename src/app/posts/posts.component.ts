@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { SocketService } from '../services/socket/socket.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-posts',
@@ -32,20 +33,19 @@ export class PostsComponent implements OnInit, OnDestroy {
    }
 
   ngOnInit() {
-    // authenticate
-    this.auth.login('');
 
-    // send messages to socket.io
-
+    // authenticate 2 JWT
+    this.auth.login('jbako');
+    // send message to socket.io
     this.socketService.userJoin('jbako');
 
-    // Retrieve posts from the API
+    // retrieve ALL posts from the API
     this.postsService.getAllPosts().subscribe(pos => {
       console.log('api: ' + pos);
       this.pos = pos;
     });
 
-    // subscribe to socketio
+    // subscribe to changes RethinkDB
     this.connection = this.socketService.getMessages().subscribe(data => {
       console.log('socket: ' + data);
       if (data['type'] === 'remove') {
@@ -56,7 +56,6 @@ export class PostsComponent implements OnInit, OnDestroy {
         this.pos = _.unionBy([data['pos']], this.pos, 'id');
       }
     });
-
   }
 
   ngOnDestroy() {
@@ -65,7 +64,6 @@ export class PostsComponent implements OnInit, OnDestroy {
 
   logId(id) {
     console.log(id);
-    this.postsService.sendMessage('me', id);
   }
 
   pdf() {
@@ -85,7 +83,6 @@ export class PostsComponent implements OnInit, OnDestroy {
       this.pdfJsonStruct = this.pdfCreatorService.createPdfType1(data);
       pdfMake.createPdf(this.pdfJsonStruct).open();
    });
-
   }
 
   // Send Email Tests

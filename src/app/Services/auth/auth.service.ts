@@ -11,13 +11,13 @@ export class AuthService {
 
   login(credentials) {
 
-    this.http.post(this.constantsService.urlServer + 'authenticate', {username: 'test', password: 'test'})
+    this.http.post(this.constantsService.urlServer + '/authenticate', {username: 'test', password: 'test'})
       .map(res => res.json())
       .subscribe(
         // We're assuming the response will be an object
         // with the JWT on an id_token key
-        data => localStorage.setItem('access_token', data.id_token),
-        error => console.log(error)
+        data => {localStorage.setItem('access_token', data.id_token); console.log('authenticated'); return true; },
+        error => {console.log(error); return false; }
       );
   }
 

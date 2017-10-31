@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { ConstantsService } from '../constants/constants.service';
 
 @Injectable()
 export class SocketService {
 
-  private url = 'http://localhost:3000';
-  public socket = io(this.url);
+    public socket = io(this.constantsService.urlServer);
 
-  constructor() { }
+  constructor( private constantsService: ConstantsService) { }
 
   userJoin(userName) {
     this.socket.emit('user-join', {id : this.socket.id, username : userName});
