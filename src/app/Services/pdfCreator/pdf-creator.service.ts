@@ -7,8 +7,7 @@ export class PdfCreatorService {
 
   createPdfType1(pdfData) {
 
-    const pdfJson =
-    {
+    const pdfJson = {
       content:
       [
         {

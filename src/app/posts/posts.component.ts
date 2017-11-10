@@ -11,6 +11,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { SocketService } from '../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
 
+
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
@@ -32,19 +33,51 @@ export class PostsComponent implements OnInit, OnDestroy {
 
    }
 
+
   ngOnInit() {
 
+
+    this.auth.login('jbako').then(
+      (jsondata) => {
+        localStorage.setItem('access_token', jsondata.id_token);
+        console.log('before socket');
+        // send message to socket.io
+        this.socketService.userJoin('jbako');
+      }
+      ).catch((error) => {
+        console.log(error);
+      });
+
+
+ // subscribe to changes RethinkDB
+ this.connection = this.socketService.getMessages().subscribe(data => {
+  console.log('socket: ' + data);
+  if (data['type'] === 'remove') {
+    console.log('remove');
+    _.pull(this.pos, _.find(this.pos, data['pos']));
+  } else {
+    console.log('received data changeFeed: ' + this.socketService.socket.id);
+    this.pos = _.unionBy([data['pos']], this.pos, 'id');
+  }
+});
+
+this.postsService.getAllPosts().subscribe(pos => {
+console.log('api: ' + pos);
+this.pos = pos;
+});
+
     // authenticate 2 JWT
-    this.auth.login('jbako');
+    // this.auth.login('jbako');
     // send message to socket.io
-    this.socketService.userJoin('jbako');
+    // this.socketService.userJoin('jbako');
 
     // retrieve ALL posts from the API
-    this.postsService.getAllPosts().subscribe(pos => {
+    /*this.postsService.getAllPosts().subscribe(pos => {
       console.log('api: ' + pos);
       this.pos = pos;
-    });
+    });*/
 
+    /*
     // subscribe to changes RethinkDB
     this.connection = this.socketService.getMessages().subscribe(data => {
       console.log('socket: ' + data);
@@ -56,6 +89,7 @@ export class PostsComponent implements OnInit, OnDestroy {
         this.pos = _.unionBy([data['pos']], this.pos, 'id');
       }
     });
+    */
   }
 
   ngOnDestroy() {
